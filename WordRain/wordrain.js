@@ -1,5 +1,5 @@
 let wordsArray = [];
-const maxWords = 3;
+const maxWords = 20;
 let mic;
 let vol;
 
@@ -20,6 +20,11 @@ document.getElementById("inputField").addEventListener("keypress", function(even
 });
 
 function createWord (text) {
+
+    if (wordsArray.length >= maxWords) {
+        let oldestWord = wordsArray.shift(); // Remove the first (oldest) word from the array
+        oldestWord.remove(); // Remove it from the DOM
+    }
     const word = document.createElement("div");
     word.classList.add("wordclass");
     word.innerText = text;
@@ -28,10 +33,10 @@ function createWord (text) {
     word.style.left = Math.random() * window.innerWidth + "px";
     word.style.top = "0px";
     word.style.fontSize = '50px';
+    word.style.alignItems ='center';
 
     wordsArray.push(word);
     
-    console.log(wordsArray)
 
     let speed = Math.random() * 3 + 2;
     let position = 0;
@@ -43,10 +48,11 @@ function createWord (text) {
     Updates the top position to simulate falling. */
 
     if (position > window.innerHeight) {
-        clearInterval(fallInterval);
-        word.remove();
-        wordsArray = wordsArray.filter(w => w !== word);
-        createWord(text);  // Recreate the word to keep the loop going
+        position = 0;
+        //clearInterval(fallInterval);
+        //word.remove();
+       // wordsArray = wordsArray.filter(w => w !== word);
+        //createWord(text);  // Recreate the word to keep the loop going
     }
 }, 30);
 /*Checks if the word reaches the bottom of the screen.
@@ -63,18 +69,6 @@ setInterval(() => {
     updateWordStyles();
 }, 100);
 
- /* function toggleClass(element) {
-    vol = mic.getLevel()
-    if (vol < 0.5) { 
-        element.classList.toggle("fontthin");
-    }
-    if (vol > 0.8) { 
-        element.classList.toggle("fontbold");
-    } else {
-        element.classList.toggle("fontmid");
-    } 
-    console.log (vol)
-} */
 
 function updateWordStyles() {
         wordsArray.forEach(word => {
@@ -95,10 +89,3 @@ function mousePressed() {
     userStartAudio();
   }
   
-
-
-function draw(){
-    if (wordsArray.length > maxWords - 1) {
-        wordsArray.splice(0,1)
-    }
-}
